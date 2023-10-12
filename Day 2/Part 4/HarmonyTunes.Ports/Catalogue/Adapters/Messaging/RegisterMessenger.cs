@@ -1,5 +1,6 @@
 ﻿
 using HarmonyTunes.Catalogue.Album.Application.Notifications;
+using HarmonyTunes.Catalogue.Shared.Application.Interfaces;
 using HarmonyTunes.Ports.Catalogue.Adapters.Messaging.Consumers;
 using Rebus.Config;
 using Rebus.Routing.TypeBased;
@@ -17,6 +18,7 @@ namespace HarmonyTunes.Ports.Catalogue.Adapters.Messaging
 
             services.AutoRegisterHandlersFromAssemblyOf<AlbumUpdatedNotificationHandler>();
         
+            services.AddScoped<IMessagePublisher, MessagePublisher>();
         }
     }
 }

@@ -24,17 +24,23 @@ public class AlbumService :
 
     public async Task<AlbumReference> CreateAlbum(AlbumName albumName)
     {
-        return await Add(agg => agg.Create(albumName));
+        var id = await Add(agg => agg.Create(albumName));
+        
+        await _messagePublisher.Publish(new AlbumUpdatedNotification
+        {
+            AlbumReference = id.Key
+        });
+
+        return id;
     }
 
     public async Task PublishAlbum(AlbumReference albumReference)
     {
-        await Update(albumReference, agg => {
-            agg.Publish();
-            _messagePublisher.Publish(new AlbumUpdatedNotification 
-            { 
-                AlbumReference = albumReference.Key 
-            });
+        await Update(albumReference, agg => agg.Publish());
+
+        await _messagePublisher.Publish(new AlbumUpdatedNotification
+        {
+            AlbumReference = albumReference.Key
         });
     }
 
