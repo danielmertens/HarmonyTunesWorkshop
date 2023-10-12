@@ -7,7 +7,7 @@ using HarmonyTunes.Domain.Core.Application;
 
 namespace HarmonyTunes.Catalogue.Album.Application;
 
-public class AlbumService : 
+public class AlbumService :
     ApplicationService<AlbumAggregate, AlbumState, AlbumReference>,
     IAlbumService
 {

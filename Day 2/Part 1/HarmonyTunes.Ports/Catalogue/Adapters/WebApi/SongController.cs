@@ -1,5 +1,4 @@
-﻿using HarmonyTunes.Catalogue.Album.Application.interfaces;
-using HarmonyTunes.Catalogue.Shared.Domain;
+﻿using HarmonyTunes.Catalogue.Shared.Domain;
 using HarmonyTunes.Catalogue.Song.Application.Interfaces;
 using HarmonyTunes.Catalogue.Song.Domain.ValueObjects;
 using HarmonyTunes.Ports.Catalogue.Models;

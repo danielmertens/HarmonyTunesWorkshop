@@ -17,7 +17,7 @@ namespace HarmonyTunes.Domain.Core.Application
         public async Task<TIdentity> Add(Action<TAggregate> action)
         {
             var identity = _repository.GetNextIdentity();
-            TAggregate aggregateRoot = (TAggregate) Activator.CreateInstance(typeof(TAggregate), identity);
+            TAggregate aggregateRoot = (TAggregate)Activator.CreateInstance(typeof(TAggregate), identity);
 
             action(aggregateRoot);
 

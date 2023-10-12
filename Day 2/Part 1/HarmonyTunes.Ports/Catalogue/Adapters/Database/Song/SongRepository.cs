@@ -1,5 +1,4 @@
-﻿using HarmonyTunes.Catalogue.Song.Domain;
-using HarmonyTunes.Catalogue.Shared.Domain;
+﻿using HarmonyTunes.Catalogue.Shared.Domain;
 using HarmonyTunes.Catalogue.Song.Application.Interfaces;
 using HarmonyTunes.Catalogue.Song.Domain;
 using Microsoft.EntityFrameworkCore;

@@ -3,11 +3,6 @@ using HarmonyTunes.Catalogue.Song.Application.Interfaces;
 using HarmonyTunes.Catalogue.Song.Domain;
 using HarmonyTunes.Catalogue.Song.Domain.ValueObjects;
 using HarmonyTunes.Domain.Core.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarmonyTunes.Catalogue.Song.Application
 {
@@ -15,7 +10,7 @@ namespace HarmonyTunes.Catalogue.Song.Application
         : ApplicationService<SongAggregate, SongState, SongReference>,
         ISongService
     {
-        public SongService(ISongRepository repository) 
+        public SongService(ISongRepository repository)
             : base(repository)
         {
         }

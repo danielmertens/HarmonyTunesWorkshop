@@ -1,12 +1,10 @@
-﻿using HarmonyTunes.Catalogue.Song.Domain;
-using HarmonyTunes.Ports.Catalogue.Adapters.Database.Song;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using HarmonyTunes.Catalogue.Shared.Domain;
 using HarmonyTunes.Catalogue.Song.Domain;
 using HarmonyTunes.Catalogue.Song.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using HarmonyTunes.Ports.Catalogue.Adapters.Database.Album;
-using HarmonyTunes.Catalogue.Shared.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HarmonyTunes.Ports.Catalogue.Adapters.Database.Song
 {
