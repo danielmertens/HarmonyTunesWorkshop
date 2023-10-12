@@ -1,34 +1,33 @@
 ﻿using HarmonyTunes.Catalogue.Album.Projection.Interfaces;
 using HarmonyTunes.Catalogue.Album.Projection.Models;
 
-namespace HarmonyTunes.Ports.Catalogue.Adapters.Database.Album
+namespace HarmonyTunes.Ports.Catalogue.Adapters.Database.Album;
+
+public class AlbumProjectionsRepository : IAlbumProjectionsRepository
 {
-    public class AlbumProjectionsRepository : IAlbumProjectionsRepository
+    private readonly CatalogueContext _context;
+
+    public AlbumProjectionsRepository(CatalogueContext context)
     {
-        private readonly CatalogueContext _context;
+        _context = context;
+    }
 
-        public AlbumProjectionsRepository(CatalogueContext context)
+    public void AddOrUpdateProjection(AlbumOverviewProjection projection)
+    {
+        var dbProjection = _context.AlbumOverviewProjection.Find(projection.Id);
+
+        if (dbProjection == null)
         {
-            _context = context;
+            _context.AlbumOverviewProjection.Add(projection);
         }
-
-        public void AddOrUpdateProjection(AlbumOverviewProjection projection)
+        else
         {
-            var dbProjection = _context.AlbumOverviewProjection.Find(projection.Id);
-
-            if (dbProjection == null)
-            {
-                _context.AlbumOverviewProjection.Add(projection);
-            }
-            else
-            {
-                _context.Entry(dbProjection).CurrentValues.SetValues(projection);
-            }
+            _context.Entry(dbProjection).CurrentValues.SetValues(projection);
         }
+    }
 
-        public async Task Commit()
-        {
-            await _context.SaveChangesAsync();
-        }
+    public async Task Commit()
+    {
+        await _context.SaveChangesAsync();
     }
 }

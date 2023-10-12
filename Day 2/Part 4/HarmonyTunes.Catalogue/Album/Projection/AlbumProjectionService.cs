@@ -6,51 +6,50 @@ using HarmonyTunes.Catalogue.Artist.Application.Interfaces;
 using HarmonyTunes.Catalogue.Shared.Domain;
 using HarmonyTunes.Catalogue.Song.Application.Interfaces;
 
-namespace HarmonyTunes.Catalogue.Album.Projection
+namespace HarmonyTunes.Catalogue.Album.Projection;
+
+public class AlbumProjectionService : IAlbumProjectionsService
 {
-    public class AlbumProjectionService : IAlbumProjectionsService
+    private readonly IAlbumQueryService _albumQueryService;
+    private readonly ISongQueryService _songQueryService;
+    private readonly IArtistRepository _artistRepository;
+    private readonly IAlbumProjectionsRepository _projectionsRepository;
+
+    public AlbumProjectionService(IAlbumQueryService albumQueryService,
+        ISongQueryService songQueryService,
+        IArtistRepository artistRepository,
+        IAlbumProjectionsRepository projectionsRepository)
     {
-        private readonly IAlbumQueryService _albumQueryService;
-        private readonly ISongQueryService _songQueryService;
-        private readonly IArtistRepository _artistRepository;
-        private readonly IAlbumProjectionsRepository _projectionsRepository;
+        _albumQueryService = albumQueryService;
+        _songQueryService = songQueryService;
+        _artistRepository = artistRepository;
+        _projectionsRepository = projectionsRepository;
+    }
 
-        public AlbumProjectionService(IAlbumQueryService albumQueryService,
-            ISongQueryService songQueryService,
-            IArtistRepository artistRepository,
-            IAlbumProjectionsRepository projectionsRepository)
+    public async Task OnAlbumUpdated(AlbumReference albumReference)
+    {
+        var album = await _albumQueryService.GetById(albumReference.Key);
+
+        if (album == null) return;
+        if ((AlbumStatus)album.Status != AlbumStatus.Published) return;
+
+        var songs = await _songQueryService.GetSongsByAlbum(albumReference.Key);
+        var artistName = "Unknown";
+        if (album.ArtistId != null)
         {
-            _albumQueryService = albumQueryService;
-            _songQueryService = songQueryService;
-            _artistRepository = artistRepository;
-            _projectionsRepository = projectionsRepository;
+            var artist = await _artistRepository.Fetch(new ArtistReference(album.ArtistId.Value));
+            artistName = artist.CurrentState.Identity.Stage.FirstName;
         }
 
-        public async Task OnAlbumUpdated(AlbumReference albumReference)
+        var projection = new AlbumOverviewProjection
         {
-            var album = await _albumQueryService.GetById(albumReference.Key);
+            Id = albumReference.Key,
+            AlbumName = album.Name,
+            ArtistName = artistName,
+            NumberOfSongs = songs.Count()
+        };
 
-            if (album == null) return;
-            if ((AlbumStatus)album.Status != AlbumStatus.Published) return;
-
-            var songs = await _songQueryService.GetSongsByAlbum(albumReference.Key);
-            var artistName = "Unknown";
-            if (album.ArtistId != null)
-            {
-                var artist = await _artistRepository.Fetch(new ArtistReference(album.ArtistId.Value));
-                artistName = artist.CurrentState.Identity.Stage.FirstName;
-            }
-
-            var projection = new AlbumOverviewProjection
-            {
-                Id = albumReference.Key,
-                AlbumName = album.Name,
-                ArtistName = artistName,
-                NumberOfSongs = songs.Count()
-            };
-
-            _projectionsRepository.AddOrUpdateProjection(projection);
-            await _projectionsRepository.Commit();
-        }
+        _projectionsRepository.AddOrUpdateProjection(projection);
+        await _projectionsRepository.Commit();
     }
 }

@@ -2,22 +2,21 @@
 using HarmonyTunes.Catalogue.Album.Application.Notifications;
 using Rebus.Handlers;
 
-namespace HarmonyTunes.Ports.Catalogue.Adapters.Messaging.Consumers
+namespace HarmonyTunes.Ports.Catalogue.Adapters.Messaging.Consumers;
+
+public class AlbumUpdatedNotificationHandler
+    : IHandleMessages<AlbumUpdatedNotification>
 {
-    public class AlbumUpdatedNotificationHandler
-        : IHandleMessages<AlbumUpdatedNotification>
+    private readonly IAlbumQueryService _albumQueryService;
+
+    public AlbumUpdatedNotificationHandler(IAlbumQueryService albumQueryService)
     {
-        private readonly IAlbumQueryService _albumQueryService;
+        _albumQueryService = albumQueryService;
+    }
 
-        public AlbumUpdatedNotificationHandler(IAlbumQueryService albumQueryService)
-        {
-            _albumQueryService = albumQueryService;
-        }
-
-        public async Task Handle(AlbumUpdatedNotification message)
-        {
-            var albumName = (await _albumQueryService.GetById(message.AlbumReference)).Name;
-            Console.WriteLine($"Album {albumName} updated.");
-        }
+    public async Task Handle(AlbumUpdatedNotification message)
+    {
+        var albumName = (await _albumQueryService.GetById(message.AlbumReference)).Name;
+        Console.WriteLine($"Album {albumName} updated.");
     }
 }

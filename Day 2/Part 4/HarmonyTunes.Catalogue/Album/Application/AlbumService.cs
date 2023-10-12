@@ -25,7 +25,7 @@ public class AlbumService :
     public async Task<AlbumReference> CreateAlbum(AlbumName albumName)
     {
         var id = await Add(agg => agg.Create(albumName));
-        
+
         await _messagePublisher.Publish(new AlbumUpdatedNotification
         {
             AlbumReference = id.Key
